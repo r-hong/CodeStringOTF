@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>ks_clusters</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Module&nbsp;ks_clusters
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="ks_clusters-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="ks_clusters-module.html">Module ks_clusters</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-comment">#! /usr/bin/env python</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">argparse</tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">sys</tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">csv</tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">math</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">os</tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">pylab</tt> <tt class="py-keyword">as</tt> <tt class="py-name">pl</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">numpy</tt> <tt class="py-keyword">as</tt> <tt class="py-name">np</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">mpl_toolkits</tt><tt class="py-op">.</tt><tt class="py-name">mplot3d</tt> <tt class="py-keyword">import</tt> <tt class="py-name">Axes3D</tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">matplotlib</tt><tt class="py-op">.</tt><tt class="py-name">pyplot</tt> <tt class="py-keyword">as</tt> <tt class="py-name">plt</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Module functions=functions-module.html"><a title="functions" class="py-name" href="#" onclick="return doclink('link-0', 'functions', 'link-0');">functions</a></tt> <tt class="py-keyword">import</tt> <tt class="py-op">*</tt>  </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">random</tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">pickle</tt>  </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">scipy</tt><tt class="py-op">.</tt><tt class="py-name">stats</tt> <tt class="py-keyword">as</tt> <tt class="py-name">s</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"> </tt>
+<a name="_make_parser"></a><div id="_make_parser-def"><a name="L18"></a><tt class="py-lineno"> 18</tt> <a class="py-toggle" href="#" id="_make_parser-toggle" onclick="return toggle('_make_parser');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="ks_clusters-module.html#_make_parser">_make_parser</a><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="_make_parser-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="_make_parser-expanded"><a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line">        <tt class="py-name">parser</tt> <tt class="py-op">=</tt> <tt class="py-name">argparse</tt><tt class="py-op">.</tt><tt class="py-name">ArgumentParser</tt><tt class="py-op">(</tt><tt class="py-name">description</tt><tt class="py-op">=</tt><tt class="py-string">"Calculate the Kolmogorov-Smirnov test using the temporal indexes from all the compitations of clusters. The result if the reordering the the clusters in a sequence that should be follow for the calculation of principal curves between pairs of cluster. In this tool we first evolve an initial guess  formed by K points to find the K center of the clusters. At each new iteration, the new points are estimated as the mean value of the DIM-dimensional voronoi cells."</tt><tt class="py-op">,</tt><tt class="py-name">epilog</tt><tt class="py-op">=</tt><tt class="py-string">"Thanks for using ks_clusters.py!!"</tt><tt class="py-op">)</tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line">        <tt class="py-name">parser</tt><tt class="py-op">.</tt><tt class="py-name">add_argument</tt><tt class="py-op">(</tt><tt class="py-string">'IN_file'</tt><tt class="py-op">,</tt> <tt class="py-name">help</tt><tt class="py-op">=</tt><tt class="py-string">"Input file"</tt><tt class="py-op">)</tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line">        <tt class="py-name">parser</tt><tt class="py-op">.</tt><tt class="py-name">add_argument</tt><tt class="py-op">(</tt><tt class="py-string">'K'</tt><tt class="py-op">,</tt> <tt class="py-name">type</tt><tt class="py-op">=</tt><tt class="py-name">int</tt><tt class="py-op">,</tt> <tt class="py-name">help</tt><tt class="py-op">=</tt><tt class="py-string">"Number of clusters."</tt><tt class="py-op">)</tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line">        <tt class="py-name">parser</tt><tt class="py-op">.</tt><tt class="py-name">add_argument</tt><tt class="py-op">(</tt><tt class="py-string">'Niter'</tt><tt class="py-op">,</tt> <tt class="py-name">type</tt><tt class="py-op">=</tt><tt class="py-name">int</tt><tt class="py-op">,</tt> <tt class="py-name">help</tt><tt class="py-op">=</tt><tt class="py-string">"Number of iterations updating the strings."</tt><tt class="py-op">)</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line">        <tt class="py-name">parser</tt><tt class="py-op">.</tt><tt class="py-name">add_argument</tt><tt class="py-op">(</tt><tt class="py-string">'-CVi'</tt><tt class="py-op">,</tt> <tt class="py-name">action</tt><tt class="py-op">=</tt><tt class="py-string">'append'</tt><tt class="py-op">,</tt> <tt class="py-name">dest</tt><tt class="py-op">=</tt><tt class="py-string">'CV2plot'</tt><tt class="py-op">,</tt> <tt class="py-name">default</tt><tt class="py-op">=</tt><tt class="py-op">[</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">help</tt><tt class="py-op">=</tt><tt class="py-string">"Indexes between [0, (DIM-1)] of the CVs to be visualized (2D and 3D options are possible)."</tt><tt class="py-op">)</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line">        <tt class="py-name">parser</tt><tt class="py-op">.</tt><tt class="py-name">add_argument</tt><tt class="py-op">(</tt><tt class="py-string">'-plotdata'</tt><tt class="py-op">,</tt> <tt class="py-name">action</tt><tt class="py-op">=</tt><tt class="py-string">'append'</tt><tt class="py-op">,</tt> <tt class="py-name">dest</tt><tt class="py-op">=</tt><tt class="py-string">'VAL'</tt><tt class="py-op">,</tt> <tt class="py-name">default</tt><tt class="py-op">=</tt><tt class="py-op">[</tt><tt class="py-op">]</tt><tt class="py-op">,</tt> <tt class="py-name">help</tt><tt class="py-op">=</tt><tt class="py-string">"Default is 'yes'. If the value 'no' is specified then the intermediate plots will be produced with the curves only."</tt><tt class="py-op">)</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">parser</tt> </tt>
+</div><a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line"><tt class="py-comment">#--------------------------------</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line"><tt id="link-1" class="py-name" targets="Variable check_pcurve._p=check_pcurve-module.html#_p,Variable convergence._p=convergence-module.html#_p,Variable findNewStart._p=findNewStart-module.html#_p,Variable ks_clusters._p=ks_clusters-module.html#_p,Variable maxLikeBoot._p=maxLikeBoot-module.html#_p,Variable mforce._p=mforce-module.html#_p,Variable sammon_BF._p=sammon_BF-module.html#_p"><a title="check_pcurve._p
+convergence._p
+findNewStart._p
+ks_clusters._p
+maxLikeBoot._p
+mforce._p
+sammon_BF._p" class="py-name" href="#" onclick="return doclink('link-1', '_p', 'link-1');">_p</a></tt>    <tt class="py-op">=</tt> <tt id="link-2" class="py-name" targets="Function check_pcurve._make_parser()=check_pcurve-module.html#_make_parser,Function convergence._make_parser()=convergence-module.html#_make_parser,Function findNewStart._make_parser()=findNewStart-module.html#_make_parser,Function ks_clusters._make_parser()=ks_clusters-module.html#_make_parser,Function maxLikeBoot._make_parser()=maxLikeBoot-module.html#_make_parser,Function mforce._make_parser()=mforce-module.html#_make_parser,Function sammon_BF._make_parser()=sammon_BF-module.html#_make_parser"><a title="check_pcurve._make_parser
+convergence._make_parser
+findNewStart._make_parser
+ks_clusters._make_parser
+maxLikeBoot._make_parser
+mforce._make_parser
+sammon_BF._make_parser" class="py-name" href="#" onclick="return doclink('link-2', '_make_parser', 'link-2');">_make_parser</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line"><tt class="py-name">__doc__</tt> <tt class="py-op">+=</tt> <tt id="link-3" class="py-name"><a title="check_pcurve._p
+convergence._p
+findNewStart._p
+ks_clusters._p
+maxLikeBoot._p
+mforce._p
+sammon_BF._p" class="py-name" href="#" onclick="return doclink('link-3', '_p', 'link-1');">_p</a></tt><tt class="py-op">.</tt><tt class="py-name">format_help</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line"><tt class="py-comment">######################################################</tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line"><tt class="py-keyword">if</tt> <tt class="py-name">__name__</tt> <tt class="py-op">==</tt> <tt class="py-string">'__main__'</tt><tt class="py-op">:</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line">        <tt class="py-name">args</tt> <tt class="py-op">=</tt> <tt id="link-4" class="py-name"><a title="check_pcurve._p
+convergence._p
+findNewStart._p
+ks_clusters._p
+maxLikeBoot._p
+mforce._p
+sammon_BF._p" class="py-name" href="#" onclick="return doclink('link-4', '_p', 'link-1');">_p</a></tt><tt class="py-op">.</tt><tt class="py-name">parse_args</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line"> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">        <tt class="py-comment">#####################################################################################################</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line">        <tt class="py-comment"># Error handling for the visualization</tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">        <tt class="py-comment">#######################################</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">CV2plot</tt><tt class="py-op">==</tt><tt class="py-op">[</tt><tt class="py-op">]</tt><tt class="py-op">:</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line">                <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">exit</tt><tt class="py-op">(</tt><tt class="py-string">'Error (-CVi): Please enter the CVs to be analysed.'</tt><tt class="py-op">)</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">CV2plot</tt><tt class="py-op">)</tt><tt class="py-op">==</tt><tt class="py-number">1</tt><tt class="py-op">)</tt> <tt class="py-keyword">or</tt> <tt class="py-op">(</tt><tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">CV2plot</tt><tt class="py-op">)</tt><tt class="py-op">&gt;</tt><tt class="py-number">3</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">                <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">exit</tt><tt class="py-op">(</tt><tt class="py-string">'Error (-CVi): only 2D or 3D visualizations are possible.'</tt><tt class="py-op">)</tt>     </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line"> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">        <tt class="py-comment">#Getting axis labels for visualization</tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line">        <tt class="py-comment">######################################</tt> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line">        <tt class="py-name">lab</tt><tt class="py-op">=</tt><tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">CV2plot</tt><tt class="py-op">)</tt><tt class="py-op">==</tt><tt class="py-number">2</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">                <tt class="py-keyword">exec</tt> <tt class="py-string">"lab.append('CV %s')"</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">CV2plot</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">                <tt class="py-keyword">exec</tt> <tt class="py-string">"lab.append('CV %s')"</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">CV2plot</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">                <tt class="py-name">CVX</tt><tt class="py-op">=</tt><tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">CV2plot</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line">                <tt class="py-name">CVY</tt><tt class="py-op">=</tt><tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">CV2plot</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line">                <tt class="py-name">labx</tt><tt class="py-op">=</tt><tt class="py-name">lab</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line">                <tt class="py-name">laby</tt><tt class="py-op">=</tt><tt class="py-name">lab</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">                <tt class="py-keyword">exec</tt> <tt class="py-string">"lab.append('CV %s')"</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">CV2plot</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">                <tt class="py-keyword">exec</tt> <tt class="py-string">"lab.append('CV %s')"</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">CV2plot</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line">                <tt class="py-keyword">exec</tt> <tt class="py-string">"lab.append('CV %s')"</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">CV2plot</tt><tt class="py-op">[</tt><tt class="py-number">2</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line">                <tt class="py-name">CVX</tt><tt class="py-op">=</tt><tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">CV2plot</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line">                <tt class="py-name">CVY</tt><tt class="py-op">=</tt><tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">CV2plot</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">                <tt class="py-name">CVZ</tt><tt class="py-op">=</tt><tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">CV2plot</tt><tt class="py-op">[</tt><tt class="py-number">2</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">                <tt class="py-name">labx</tt><tt class="py-op">=</tt><tt class="py-name">lab</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">                <tt class="py-name">laby</tt><tt class="py-op">=</tt><tt class="py-name">lab</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">                <tt class="py-name">labz</tt><tt class="py-op">=</tt><tt class="py-name">lab</tt><tt class="py-op">[</tt><tt class="py-number">2</tt><tt class="py-op">]</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">        <tt class="py-comment"># error handling for the optional -plotdata argument </tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">        <tt class="py-name">plotdata</tt><tt class="py-op">=</tt><tt class="py-string">'yes'</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line"> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">VAL</tt><tt class="py-op">==</tt><tt class="py-op">[</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">                <tt class="py-name">plotdata</tt><tt class="py-op">=</tt><tt class="py-string">'yes'</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">                <tt class="py-name">dd</tt><tt class="py-op">=</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">VAL</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">dd</tt><tt class="py-op">==</tt><tt class="py-string">'no'</tt><tt class="py-op">:</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">                        <tt class="py-comment">#print 'no data willbe plotted...'</tt> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line">                        <tt class="py-name">plotdata</tt><tt class="py-op">=</tt><tt class="py-name">dd</tt> </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line">                <tt class="py-keyword">elif</tt> <tt class="py-op">(</tt><tt class="py-name">dd</tt><tt class="py-op">==</tt><tt class="py-string">'yes'</tt><tt class="py-op">)</tt> <tt class="py-keyword">or</tt> <tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">VAL</tt><tt class="py-op">==</tt><tt class="py-op">[</tt><tt class="py-op">]</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">                        <tt class="py-comment">#print 'plot everything...'</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">                        <tt class="py-name">plotdata</tt><tt class="py-op">=</tt><tt class="py-string">'yes'</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">                <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">                        <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">exit</tt><tt class="py-op">(</tt><tt class="py-string">"Error (-plotdata): Only 'yes' or 'no' values are admisible."</tt><tt class="py-op">)</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">         </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">        <tt class="py-comment">####### MAIN ###################################################################</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">        <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">stdout</tt><tt class="py-op">.</tt><tt class="py-name">write</tt><tt class="py-op">(</tt><tt class="py-string">"\a"</tt><tt class="py-op">)</tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">        <tt class="py-comment">#loading data points ('N' points for each one of the 'DIM' CVs)</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">        <tt class="py-name">N</tt><tt class="py-op">=</tt><tt id="link-5" class="py-name" targets="Function functions.file_lines()=functions-module.html#file_lines"><a title="functions.file_lines" class="py-name" href="#" onclick="return doclink('link-5', 'file_lines', 'link-5');">file_lines</a></tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">IN_file</tt><tt class="py-op">)</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">        <tt class="py-name">DIM</tt><tt class="py-op">=</tt><tt id="link-6" class="py-name" targets="Function functions.file_cols()=functions-module.html#file_cols"><a title="functions.file_cols" class="py-name" href="#" onclick="return doclink('link-6', 'file_cols', 'link-6');">file_cols</a></tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">IN_file</tt><tt class="py-op">)</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line"> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">        <tt class="py-name">P1</tt><tt class="py-op">=</tt><tt id="link-7" class="py-name" targets="Function functions.load_data()=functions-module.html#load_data"><a title="functions.load_data" class="py-name" href="#" onclick="return doclink('link-7', 'load_data', 'link-7');">load_data</a></tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">IN_file</tt><tt class="py-op">,</tt><tt class="py-name">N</tt><tt class="py-op">,</tt><tt class="py-name">DIM</tt><tt class="py-op">)</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">        <tt class="py-name">dK1</tt><tt class="py-op">=</tt><tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">        <tt class="py-name">dK2</tt><tt class="py-op">=</tt><tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">        <tt class="py-name">conv_all</tt><tt class="py-op">=</tt><tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line"> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">        <tt class="py-comment"># estimate the initial string (P2) of size Min</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">        <tt class="py-name">P2</tt> <tt class="py-op">=</tt> <tt id="link-8" class="py-name" targets="Function functions.string_ini()=functions-module.html#string_ini"><a title="functions.string_ini" class="py-name" href="#" onclick="return doclink('link-8', 'string_ini', 'link-8');">string_ini</a></tt><tt class="py-op">(</tt><tt class="py-name">P1</tt><tt class="py-op">,</tt><tt class="py-name">DIM</tt><tt class="py-op">,</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">K</tt><tt class="py-op">)</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line">        <tt class="py-name">Pini</tt><tt class="py-op">=</tt><tt id="link-9" class="py-name"><a title="functions.string_ini" class="py-name" href="#" onclick="return doclink('link-9', 'string_ini', 'link-8');">string_ini</a></tt><tt class="py-op">(</tt><tt class="py-name">P1</tt><tt class="py-op">,</tt><tt class="py-name">DIM</tt><tt class="py-op">,</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">K</tt><tt class="py-op">)</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">        <tt class="py-name">PiniT</tt><tt class="py-op">=</tt><tt class="py-name">zip</tt><tt class="py-op">(</tt><tt class="py-op">*</tt><tt class="py-name">Pini</tt><tt class="py-op">)</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line"> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">        <tt class="py-comment"># maximun distances of the data to the images of the string</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">        <tt class="py-name">maxdistances</tt><tt class="py-op">=</tt><tt id="link-10" class="py-name" targets="Function functions.maxvec()=functions-module.html#maxvec"><a title="functions.maxvec" class="py-name" href="#" onclick="return doclink('link-10', 'maxvec', 'link-10');">maxvec</a></tt><tt class="py-op">(</tt><tt class="py-name">P1</tt><tt class="py-op">,</tt><tt class="py-name">P2</tt><tt class="py-op">)</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line"> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">        <tt class="py-comment"># Estimate the mean of the voronoid cells</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">        <tt class="py-name">P3</tt><tt class="py-op">,</tt> <tt class="py-name">fail</tt><tt class="py-op">,</tt> <tt class="py-name">free_energy</tt><tt class="py-op">,</tt> <tt class="py-name">allpoints</tt><tt class="py-op">,</tt> <tt class="py-name">closeP</tt><tt class="py-op">,</tt> <tt class="py-name">closeI</tt> <tt class="py-op">=</tt> <tt id="link-11" class="py-name" targets="Function functions.voroid_mean()=functions-module.html#voroid_mean"><a title="functions.voroid_mean" class="py-name" href="#" onclick="return doclink('link-11', 'voroid_mean', 'link-11');">voroid_mean</a></tt><tt class="py-op">(</tt><tt class="py-name">P1</tt><tt class="py-op">,</tt><tt class="py-name">P2</tt><tt class="py-op">,</tt><tt class="py-name">DIM</tt><tt class="py-op">,</tt><tt class="py-name">maxdistances</tt><tt class="py-op">,</tt><tt class="py-number">0</tt><tt class="py-op">)</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line"> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">        <tt class="py-comment">#######################################################</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">CV2plot</tt><tt class="py-op">)</tt><tt class="py-op">==</tt><tt class="py-number">3</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">                <tt class="py-name">converg</tt><tt class="py-op">=</tt><tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">                <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">range</tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">Niter</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">                        <tt class="py-keyword">print</tt> <tt class="py-string">'Iteration '</tt><tt class="py-op">,</tt> <tt class="py-op">(</tt><tt class="py-name">i</tt><tt class="py-op">+</tt><tt class="py-number">1</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-string">'out of '</tt><tt class="py-op">,</tt> <tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">Niter</tt> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">                        <tt class="py-comment"># get voronoid centers</tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">                        <tt class="py-name">maxdistances</tt><tt class="py-op">=</tt><tt id="link-12" class="py-name"><a title="functions.maxvec" class="py-name" href="#" onclick="return doclink('link-12', 'maxvec', 'link-10');">maxvec</a></tt><tt class="py-op">(</tt><tt class="py-name">P1</tt><tt class="py-op">,</tt><tt class="py-name">P3</tt><tt class="py-op">)</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line">                        <tt class="py-name">Pm</tt><tt class="py-op">,</tt> <tt class="py-name">fail</tt><tt class="py-op">,</tt> <tt class="py-name">free_energy</tt><tt class="py-op">,</tt> <tt class="py-name">allpoints</tt><tt class="py-op">,</tt> <tt class="py-name">closeP</tt><tt class="py-op">,</tt> <tt class="py-name">closeI</tt> <tt class="py-op">=</tt> <tt id="link-13" class="py-name"><a title="functions.voroid_mean" class="py-name" href="#" onclick="return doclink('link-13', 'voroid_mean', 'link-11');">voroid_mean</a></tt><tt class="py-op">(</tt><tt class="py-name">P1</tt><tt class="py-op">,</tt><tt class="py-name">P3</tt><tt class="py-op">,</tt><tt class="py-name">DIM</tt><tt class="py-op">,</tt><tt class="py-name">maxdistances</tt><tt class="py-op">,</tt><tt class="py-number">0</tt><tt class="py-op">)</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line">                        <tt class="py-name">d</tt><tt class="py-op">=</tt><tt class="py-name">np</tt><tt class="py-op">.</tt><tt class="py-name">linalg</tt><tt class="py-op">.</tt><tt class="py-name">norm</tt><tt class="py-op">(</tt><tt class="py-name">np</tt><tt class="py-op">.</tt><tt class="py-name">asarray</tt><tt class="py-op">(</tt><tt class="py-name">Pm</tt><tt class="py-op">)</tt><tt class="py-op">-</tt><tt class="py-name">np</tt><tt class="py-op">.</tt><tt class="py-name">asarray</tt><tt class="py-op">(</tt><tt class="py-name">P3</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line">                        <tt class="py-name">converg</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">d</tt><tt class="py-op">)</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line">                        <tt class="py-name">P3</tt><tt class="py-op">=</tt><tt class="py-name">Pm</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line"> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line">                <tt class="py-name">converg</tt><tt class="py-op">=</tt><tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line">                <tt class="py-keyword">for</tt> <tt class="py-name">i</tt> <tt class="py-keyword">in</tt> <tt class="py-name">range</tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">Niter</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line">                        <tt class="py-keyword">print</tt> <tt class="py-string">'Iteration '</tt><tt class="py-op">,</tt> <tt class="py-op">(</tt><tt class="py-name">i</tt><tt class="py-op">+</tt><tt class="py-number">1</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt class="py-string">'out of '</tt><tt class="py-op">,</tt> <tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">Niter</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">                        <tt class="py-comment"># get voronoid centers</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">                        <tt class="py-name">maxdistances</tt><tt class="py-op">=</tt><tt id="link-14" class="py-name"><a title="functions.maxvec" class="py-name" href="#" onclick="return doclink('link-14', 'maxvec', 'link-10');">maxvec</a></tt><tt class="py-op">(</tt><tt class="py-name">P1</tt><tt class="py-op">,</tt><tt class="py-name">P3</tt><tt class="py-op">)</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">                        <tt class="py-name">Pm</tt><tt class="py-op">,</tt> <tt class="py-name">fail</tt><tt class="py-op">,</tt> <tt class="py-name">free_energy</tt><tt class="py-op">,</tt> <tt class="py-name">allpoints</tt><tt class="py-op">,</tt> <tt class="py-name">closeP</tt><tt class="py-op">,</tt> <tt class="py-name">closeI</tt> <tt class="py-op">=</tt> <tt id="link-15" class="py-name"><a title="functions.voroid_mean" class="py-name" href="#" onclick="return doclink('link-15', 'voroid_mean', 'link-11');">voroid_mean</a></tt><tt class="py-op">(</tt><tt class="py-name">P1</tt><tt class="py-op">,</tt><tt class="py-name">P3</tt><tt class="py-op">,</tt><tt class="py-name">DIM</tt><tt class="py-op">,</tt><tt class="py-name">maxdistances</tt><tt class="py-op">,</tt><tt class="py-number">0</tt><tt class="py-op">)</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">                        <tt class="py-name">d</tt><tt class="py-op">=</tt><tt class="py-name">np</tt><tt class="py-op">.</tt><tt class="py-name">linalg</tt><tt class="py-op">.</tt><tt class="py-name">norm</tt><tt class="py-op">(</tt><tt class="py-name">np</tt><tt class="py-op">.</tt><tt class="py-name">asarray</tt><tt class="py-op">(</tt><tt class="py-name">Pm</tt><tt class="py-op">)</tt><tt class="py-op">-</tt><tt class="py-name">np</tt><tt class="py-op">.</tt><tt class="py-name">asarray</tt><tt class="py-op">(</tt><tt class="py-name">P3</tt><tt class="py-op">)</tt><tt class="py-op">)</tt>  </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line">                        <tt class="py-name">converg</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">d</tt><tt class="py-op">)</tt> </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line">                        <tt class="py-name">P3</tt><tt class="py-op">=</tt><tt class="py-name">Pm</tt> </tt>
+<a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">         </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">        <tt class="py-comment">############################################################################</tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line">        <tt class="py-comment">##### PLOTING of the final curve with data #####</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">fail</tt><tt class="py-op">==</tt><tt class="py-number">1</tt><tt class="py-op">:</tt> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">                <tt class="py-keyword">print</tt> <tt class="py-string">'Failed run... (no output)'</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">                <tt class="py-name">PP1</tt><tt class="py-op">=</tt><tt class="py-name">zip</tt><tt class="py-op">(</tt><tt class="py-op">*</tt><tt class="py-name">P1</tt><tt class="py-op">)</tt> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line">                <tt class="py-name">PP2</tt><tt class="py-op">=</tt><tt class="py-name">zip</tt><tt class="py-op">(</tt><tt class="py-op">*</tt><tt class="py-name">P2</tt><tt class="py-op">)</tt> </tt>
+<a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line">                <tt class="py-name">PP3</tt><tt class="py-op">=</tt><tt class="py-name">zip</tt><tt class="py-op">(</tt><tt class="py-op">*</tt><tt class="py-name">P3</tt><tt class="py-op">)</tt> </tt>
+<a name="L130"></a><tt class="py-lineno">130</tt>  <tt class="py-line">                <tt class="py-comment">#ploting</tt> </tt>
+<a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-op">(</tt><tt class="py-name">len</tt><tt class="py-op">(</tt><tt class="py-name">args</tt><tt class="py-op">.</tt><tt class="py-name">CV2plot</tt><tt class="py-op">)</tt><tt class="py-op">==</tt><tt class="py-number">3</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line"> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line">                <tt class="py-comment">#if args.DIM==3:</tt> </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line">                <tt class="py-name">fig</tt> <tt class="py-op">=</tt> <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">figure</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line">                <tt class="py-name">ax</tt> <tt class="py-op">=</tt> <tt class="py-name">fig</tt><tt class="py-op">.</tt><tt class="py-name">add_subplot</tt><tt class="py-op">(</tt><tt class="py-number">111</tt><tt class="py-op">,</tt><tt class="py-name">projection</tt><tt class="py-op">=</tt><tt class="py-string">'3d'</tt><tt class="py-op">)</tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line">                <tt class="py-name">ax</tt><tt class="py-op">.</tt><tt class="py-name">set_xlabel</tt><tt class="py-op">(</tt><tt class="py-name">labx</tt><tt class="py-op">)</tt> </tt>
+<a name="L137"></a><tt class="py-lineno">137</tt>  <tt class="py-line">                <tt class="py-name">ax</tt><tt class="py-op">.</tt><tt class="py-name">set_ylabel</tt><tt class="py-op">(</tt><tt class="py-name">laby</tt><tt class="py-op">)</tt> </tt>
+<a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line">                <tt class="py-name">ax</tt><tt class="py-op">.</tt><tt class="py-name">set_zlabel</tt><tt class="py-op">(</tt><tt class="py-name">labz</tt><tt class="py-op">)</tt> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line">                <tt class="py-name">ax</tt><tt class="py-op">.</tt><tt class="py-name">set_title</tt><tt class="py-op">(</tt><tt class="py-string">'Cluster centers'</tt><tt class="py-op">,</tt> <tt class="py-name">alpha</tt><tt class="py-op">=</tt><tt class="py-number">0.6</tt><tt class="py-op">)</tt> </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line">                <tt class="py-name">ax</tt><tt class="py-op">.</tt><tt class="py-name">scatter</tt><tt class="py-op">(</tt><tt class="py-name">PP1</tt><tt class="py-op">[</tt><tt class="py-name">CVX</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-name">PP1</tt><tt class="py-op">[</tt><tt class="py-name">CVY</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-name">PP1</tt><tt class="py-op">[</tt><tt class="py-name">CVZ</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-name">c</tt><tt class="py-op">=</tt><tt class="py-string">'m'</tt><tt class="py-op">,</tt><tt class="py-name">marker</tt><tt class="py-op">=</tt><tt class="py-string">'o'</tt><tt class="py-op">,</tt><tt class="py-name">s</tt><tt class="py-op">=</tt><tt class="py-number">0.5</tt><tt class="py-op">,</tt><tt class="py-name">alpha</tt><tt class="py-op">=</tt><tt class="py-number">0.5</tt><tt class="py-op">)</tt> </tt>
+<a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line">                <tt class="py-name">ax</tt><tt class="py-op">.</tt><tt class="py-name">scatter</tt><tt class="py-op">(</tt><tt class="py-name">PP3</tt><tt class="py-op">[</tt><tt class="py-name">CVX</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-name">PP3</tt><tt class="py-op">[</tt><tt class="py-name">CVY</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-name">PP3</tt><tt class="py-op">[</tt><tt class="py-name">CVZ</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-name">c</tt><tt class="py-op">=</tt><tt class="py-string">'r'</tt><tt class="py-op">,</tt><tt class="py-name">marker</tt><tt class="py-op">=</tt><tt class="py-string">'o'</tt><tt class="py-op">,</tt><tt class="py-name">s</tt><tt class="py-op">=</tt><tt class="py-number">100</tt><tt class="py-op">)</tt> </tt>
+<a name="L142"></a><tt class="py-lineno">142</tt>  <tt class="py-line">                <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">show</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line">        <tt class="py-comment">#       if args.DIM==2:</tt> </tt>
+<a name="L145"></a><tt class="py-lineno">145</tt>  <tt class="py-line">                <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">title</tt><tt class="py-op">(</tt><tt class="py-string">'Cluster centers'</tt><tt class="py-op">,</tt><tt class="py-name">alpha</tt><tt class="py-op">=</tt><tt class="py-number">0.6</tt><tt class="py-op">)</tt> </tt>
+<a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line">                <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">scatter</tt><tt class="py-op">(</tt><tt class="py-name">PP1</tt><tt class="py-op">[</tt><tt class="py-name">CVX</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-name">PP1</tt><tt class="py-op">[</tt><tt class="py-name">CVY</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-name">c</tt><tt class="py-op">=</tt><tt class="py-string">'m'</tt><tt class="py-op">,</tt><tt class="py-name">marker</tt><tt class="py-op">=</tt><tt class="py-string">'o'</tt><tt class="py-op">,</tt><tt class="py-name">s</tt><tt class="py-op">=</tt><tt class="py-number">1.5</tt><tt class="py-op">,</tt><tt class="py-name">alpha</tt><tt class="py-op">=</tt><tt class="py-number">0.5</tt><tt class="py-op">)</tt> </tt>
+<a name="L147"></a><tt class="py-lineno">147</tt>  <tt class="py-line">                <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">scatter</tt><tt class="py-op">(</tt><tt class="py-name">PP3</tt><tt class="py-op">[</tt><tt class="py-name">CVX</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-name">PP3</tt><tt class="py-op">[</tt><tt class="py-name">CVY</tt><tt class="py-op">]</tt><tt class="py-op">,</tt><tt class="py-name">c</tt><tt class="py-op">=</tt><tt class="py-string">'r'</tt><tt class="py-op">,</tt><tt class="py-name">marker</tt><tt class="py-op">=</tt><tt class="py-string">'o'</tt><tt class="py-op">,</tt><tt class="py-name">s</tt><tt class="py-op">=</tt><tt class="py-number">100</tt><tt class="py-op">)</tt> </tt>
+<a name="L148"></a><tt class="py-lineno">148</tt>  <tt class="py-line">                <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">xlabel</tt><tt class="py-op">(</tt><tt class="py-name">labx</tt><tt class="py-op">)</tt> </tt>
+<a name="L149"></a><tt class="py-lineno">149</tt>  <tt class="py-line">                <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">ylabel</tt><tt class="py-op">(</tt><tt class="py-name">laby</tt><tt class="py-op">)</tt> </tt>
+<a name="L150"></a><tt class="py-lineno">150</tt>  <tt class="py-line">                <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">show</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L151"></a><tt class="py-lineno">151</tt>  <tt class="py-line"> </tt>
+<a name="L152"></a><tt class="py-lineno">152</tt>  <tt class="py-line">        <tt class="py-comment">#plot</tt> </tt>
+<a name="L153"></a><tt class="py-lineno">153</tt>  <tt class="py-line">        <tt class="py-name">x1</tt><tt class="py-op">,</tt><tt class="py-name">cdf1</tt><tt class="py-op">=</tt><tt id="link-16" class="py-name" targets="Function functions.ecdf()=functions-module.html#ecdf"><a title="functions.ecdf" class="py-name" href="#" onclick="return doclink('link-16', 'ecdf', 'link-16');">ecdf</a></tt><tt class="py-op">(</tt><tt class="py-name">allpoints</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L154"></a><tt class="py-lineno">154</tt>  <tt class="py-line">        <tt class="py-name">x2</tt><tt class="py-op">,</tt><tt class="py-name">cdf2</tt><tt class="py-op">=</tt><tt id="link-17" class="py-name"><a title="functions.ecdf" class="py-name" href="#" onclick="return doclink('link-17', 'ecdf', 'link-16');">ecdf</a></tt><tt class="py-op">(</tt><tt class="py-name">allpoints</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L155"></a><tt class="py-lineno">155</tt>  <tt class="py-line">        <tt class="py-name">d1</tt><tt class="py-op">=</tt><tt class="py-name">allpoints</tt><tt class="py-op">[</tt><tt class="py-number">2</tt><tt class="py-op">]</tt> </tt>
+<a name="L156"></a><tt class="py-lineno">156</tt>  <tt class="py-line">        <tt class="py-name">d1</tt><tt class="py-op">.</tt><tt class="py-name">pop</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L157"></a><tt class="py-lineno">157</tt>  <tt class="py-line">        <tt class="py-name">x3</tt><tt class="py-op">,</tt><tt class="py-name">cdf3</tt><tt class="py-op">=</tt><tt id="link-18" class="py-name"><a title="functions.ecdf" class="py-name" href="#" onclick="return doclink('link-18', 'ecdf', 'link-16');">ecdf</a></tt><tt class="py-op">(</tt><tt class="py-name">d1</tt><tt class="py-op">)</tt> </tt>
+<a name="L158"></a><tt class="py-lineno">158</tt>  <tt class="py-line">        <tt class="py-name">x4</tt><tt class="py-op">,</tt><tt class="py-name">cdf4</tt><tt class="py-op">=</tt><tt id="link-19" class="py-name"><a title="functions.ecdf" class="py-name" href="#" onclick="return doclink('link-19', 'ecdf', 'link-16');">ecdf</a></tt><tt class="py-op">(</tt><tt class="py-name">allpoints</tt><tt class="py-op">[</tt><tt class="py-number">3</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L159"></a><tt class="py-lineno">159</tt>  <tt class="py-line">        <tt class="py-name">x5</tt><tt class="py-op">,</tt><tt class="py-name">cdf5</tt><tt class="py-op">=</tt><tt id="link-20" class="py-name"><a title="functions.ecdf" class="py-name" href="#" onclick="return doclink('link-20', 'ecdf', 'link-16');">ecdf</a></tt><tt class="py-op">(</tt><tt class="py-name">allpoints</tt><tt class="py-op">[</tt><tt class="py-number">4</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+<a name="L160"></a><tt class="py-lineno">160</tt>  <tt class="py-line">        <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">ylabel</tt><tt class="py-op">(</tt><tt class="py-string">'Cummulative Prob.'</tt><tt class="py-op">)</tt> </tt>
+<a name="L161"></a><tt class="py-lineno">161</tt>  <tt class="py-line">        <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">xlabel</tt><tt class="py-op">(</tt><tt class="py-string">'MD time'</tt><tt class="py-op">)</tt> </tt>
+<a name="L162"></a><tt class="py-lineno">162</tt>  <tt class="py-line">        <tt class="py-comment">#pl.xlim(min(x1),max(x5))</tt> </tt>
+<a name="L163"></a><tt class="py-lineno">163</tt>  <tt class="py-line">        <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">title</tt><tt class="py-op">(</tt><tt class="py-string">'CDF'</tt><tt class="py-op">)</tt> </tt>
+<a name="L164"></a><tt class="py-lineno">164</tt>  <tt class="py-line">        <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">plot</tt><tt class="py-op">(</tt><tt class="py-name">x1</tt><tt class="py-op">,</tt><tt class="py-name">cdf1</tt><tt class="py-op">,</tt><tt class="py-name">c</tt><tt class="py-op">=</tt><tt class="py-string">'k'</tt><tt class="py-op">,</tt> <tt class="py-name">linewidth</tt><tt class="py-op">=</tt><tt class="py-number">2</tt><tt class="py-op">,</tt> <tt class="py-name">label</tt><tt class="py-op">=</tt><tt class="py-string">'cluster0'</tt><tt class="py-op">)</tt> </tt>
+<a name="L165"></a><tt class="py-lineno">165</tt>  <tt class="py-line">        <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">plot</tt><tt class="py-op">(</tt><tt class="py-name">x2</tt><tt class="py-op">,</tt><tt class="py-name">cdf2</tt><tt class="py-op">,</tt><tt class="py-name">c</tt><tt class="py-op">=</tt><tt class="py-string">'b'</tt><tt class="py-op">,</tt> <tt class="py-name">linewidth</tt><tt class="py-op">=</tt><tt class="py-number">2</tt><tt class="py-op">,</tt> <tt class="py-name">label</tt><tt class="py-op">=</tt><tt class="py-string">'cluster1'</tt><tt class="py-op">)</tt> </tt>
+<a name="L166"></a><tt class="py-lineno">166</tt>  <tt class="py-line">        <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">plot</tt><tt class="py-op">(</tt><tt class="py-name">x3</tt><tt class="py-op">,</tt><tt class="py-name">cdf3</tt><tt class="py-op">,</tt><tt class="py-name">c</tt><tt class="py-op">=</tt><tt class="py-string">'m'</tt><tt class="py-op">,</tt> <tt class="py-name">linewidth</tt><tt class="py-op">=</tt><tt class="py-number">2</tt><tt class="py-op">,</tt> <tt class="py-name">label</tt><tt class="py-op">=</tt><tt class="py-string">'cluster2'</tt><tt class="py-op">)</tt> </tt>
+<a name="L167"></a><tt class="py-lineno">167</tt>  <tt class="py-line">        <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">plot</tt><tt class="py-op">(</tt><tt class="py-name">x4</tt><tt class="py-op">,</tt><tt class="py-name">cdf4</tt><tt class="py-op">,</tt><tt class="py-name">c</tt><tt class="py-op">=</tt><tt class="py-string">'g'</tt><tt class="py-op">,</tt> <tt class="py-name">linewidth</tt><tt class="py-op">=</tt><tt class="py-number">2</tt><tt class="py-op">,</tt> <tt class="py-name">label</tt><tt class="py-op">=</tt><tt class="py-string">'cluster3'</tt><tt class="py-op">)</tt> </tt>
+<a name="L168"></a><tt class="py-lineno">168</tt>  <tt class="py-line">        <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">plot</tt><tt class="py-op">(</tt><tt class="py-name">x5</tt><tt class="py-op">,</tt><tt class="py-name">cdf5</tt><tt class="py-op">,</tt><tt class="py-name">c</tt><tt class="py-op">=</tt><tt class="py-string">'r'</tt><tt class="py-op">,</tt> <tt class="py-name">linewidth</tt><tt class="py-op">=</tt><tt class="py-number">2</tt><tt class="py-op">,</tt> <tt class="py-name">label</tt><tt class="py-op">=</tt><tt class="py-string">'cluster4'</tt><tt class="py-op">)</tt> </tt>
+<a name="L169"></a><tt class="py-lineno">169</tt>  <tt class="py-line">        <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">legend</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L170"></a><tt class="py-lineno">170</tt>  <tt class="py-line">        <tt class="py-name">pl</tt><tt class="py-op">.</tt><tt class="py-name">show</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L171"></a><tt class="py-lineno">171</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Oct  1 01:12:19 2015
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
