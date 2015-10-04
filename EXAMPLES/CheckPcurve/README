@@ -1,0 +1,2 @@
+example:
+./check_pcurve.py pcurve_state.dat -plot yes -save no

@@ -1,0 +1,2 @@
+example:
+>./maxLikeBoot.py forces1.out 100 100 10

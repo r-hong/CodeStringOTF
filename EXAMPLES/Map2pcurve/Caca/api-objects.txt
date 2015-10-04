@@ -1,0 +1,4 @@
+map2pcurve	map2pcurve-module.html
+map2pcurve._make_parser	map2pcurve-module.html#_make_parser
+map2pcurve._p	map2pcurve-module.html#_p
+map2pcurve.__package__	map2pcurve-module.html#__package__

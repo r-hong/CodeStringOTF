@@ -1,0 +1,2 @@
+example:
+./map2pcurve.py pcurve_state.dat rmsd_backbone_all.dat 1 100
