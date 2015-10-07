@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 '''
-This is my script
+
 '''
 ###################################################
 # Rolando P. Hong Enriquez (rolando.hong@iit.it) ##

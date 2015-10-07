@@ -1,0 +1,2 @@
+example:
+>./meanReversalTest.py timeSeries.dat

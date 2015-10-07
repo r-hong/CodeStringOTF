@@ -1,0 +1,2 @@
+example:
+./pointDensity3D.py pcurve_state.dat LIGAND_COM_ALL.txt out.out 1
