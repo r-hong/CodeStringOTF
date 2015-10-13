@@ -1,5 +1,4 @@
-This repository contains a collection of helper functions and tools written in python aimed to perform
-simulations and analysis of:
+This repository contains a collection of helper functions and tools written in python to perform simulations and analysis of:
 
 (1) principal curve
 (2) On the fly (OTF) string method calculations.
@@ -10,5 +9,5 @@ Although this is a work in progress, the final version will also include:
 -a tutorial
 -documentation (http://r-hong.github.io/DocumentationStringOTF/)
 
-updates to this repository will be done within the next few weeks ultil completion.
+This repository is on active development.
 

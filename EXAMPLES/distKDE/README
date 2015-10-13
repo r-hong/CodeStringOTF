@@ -1,0 +1,2 @@
+example:
+>./distKDE.py rmsdRes.dat 56 59
