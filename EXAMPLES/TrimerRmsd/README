@@ -1,0 +1,2 @@
+example:
+>./trimerKDE.py rmsd_trimer 284 20
