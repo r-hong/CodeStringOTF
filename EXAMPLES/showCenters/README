@@ -1,0 +1,2 @@
+example:
+./showCenters.py rawClusters6 6 30 -CV 0 -CV 1 -CV 2 -plotdata yes

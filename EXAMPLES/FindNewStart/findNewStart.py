@@ -21,8 +21,9 @@ import matplotlib.pyplot as plt
 ###### Parsing arguments from the command line ########
 #######################################################
 def _make_parser():
-	parser = argparse.ArgumentParser(description="This uses coordinate data produced by a OTF string method calculation to find the mean string from the strings produced between iterations Nit1 and Nit2, then reparametrizes the found mean string to Mout points and finally fonds the coordinate files that are closest to each point in the Mout reparametrized string.",epilog="Thanks for using findNewStart.py!!")
+	parser = argparse.ArgumentParser(description="This uses coordinate data produced by a OTF string method calculation to find the mean string from the strings produced between iterations Nit1 and Nit2, then reparametrizes the found mean string to Mout points and finally finds the coordinate files that are closest to each point in the Mout reparametrized string.",epilog="Thanks for using findNewStart.py!!")
 	parser.add_argument('ligand', help="name of the ligand residue in the pdb file.")
+	parser.add_argument('prefix', help="name of the prefix from the input pdb files.")
 	parser.add_argument('Nimages', type=int, help="Number of images in the string.")
 	parser.add_argument('Nit1', type=int, help="Fist iteration to be analyzed.")
 	parser.add_argument('Nit2', type=int, help="Last iteration to be analized.")
@@ -42,7 +43,8 @@ if __name__ == '__main__':
 	print '(2) reparametrizes the found mean string to Mout equidistant points'
 	print '(3) finds the pdb files (using allways the data from Nit1 to Nit2) that are closest'
 	print '    to each point in the Mout reparametrized string'
-	print '(4) saves: (a) the coordinates of the center of mass (COM) of the new Mout points (CVs), '
+	print '(4) prefix of the pdb input files'
+	print '(5) saves: (a) the coordinates of the center of mass (COM) of the new Mout points (CVs), '
 	print '           (b) the indices of the pdb files between Nit1 and Nit2 used to create the new starting pdb files' 
 	print '           (c) starting pdb files (Pi.pdb, 1<=i<=Mout) '
 	print 'a new run will move the ligand from their initial positions in (c) to the positions specified in (a)     ' 
@@ -56,12 +58,12 @@ if __name__ == '__main__':
 	allstrings=[]
 	existingF=[]
 	for i in range(args.Nit1,args.Nit2):
-		filea=getPdbFilename(1,i)
+		filea=getPdbFilename(1,i,args.prefix)
 		string=[]
 		if os.path.isfile(filea):
 			#existingF.append(i) #existing files
 			for j in range(1,args.Nimages+1):
-				pdb_A=getPdbFilename(j,i)
+				pdb_A=getPdbFilename(j,i,args.prefix)
 				shutil.copy2(pdb_A, pdb_tmp)
 				df=pdb2df(pdb_tmp)
 				xc,yc,zc=ligCOM(df,args.ligand)
@@ -118,11 +120,11 @@ if __name__ == '__main__':
 	for q in range(args.Mout):
 		dist_final=5
 		for i in range(args.Nit1,args.Nit2):
-        		filea=getPdbFilename(1,i)
+        		filea=getPdbFilename(1,i,args.prefix)
         		string=[]
         		if os.path.isfile(filea):
                 		for j in range(1,args.Nimages+1):
-                        		pdb_A=getPdbFilename(j,i)
+                        		pdb_A=getPdbFilename(j,i,args.prefix)
                         		shutil.copy2(pdb_A, pdb_tmp)
                         		df=pdb2df(pdb_tmp)
                         		xc,yc,zc=ligCOM(df,args.ligand)
@@ -143,7 +145,7 @@ if __name__ == '__main__':
 		#print 'ss',ss
 		j=d[0]
 		i=d[1]
-		pdb_A=getPdbFilename(j,i)
+		pdb_A=getPdbFilename(j,i,args.prefix)
 		prefix='P'
 		prefix+=`ss`
 		prefix+='.pdb'
@@ -151,7 +153,7 @@ if __name__ == '__main__':
 		prefix=''
 
 	#Saving the indices of the pdb files that were used to build the Mout coordinate pdb files
-	outc='pdb_indices.txt'
+	outc='pdb_indices.dat'
 	g = open(outc, "w")
 	g.write("Indices (a,b) of the pdb files used to build a string with (Mout={:<3}) images\n".format(args.Mout))
 	g.write("namdout[a]-[b].coor\n")

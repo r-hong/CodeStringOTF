@@ -1,0 +1,2 @@
+example
+>./pcurve.py COM_DIH.txt 4 10 0.5 30 -CV 0 -CV 1 -CV 2 -plotdata yes

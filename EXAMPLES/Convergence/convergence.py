@@ -1,12 +1,5 @@
 #! /usr/bin/env python
 """
-Tool to estimate the convergence of the string method for the calculation of the minimum free energy path. 
-The calculation is based of the succesive differences between "strings" in the space of the normalized CVs. 
-In the input files: 
-(1) each column represents a CV, 
-(2) each row represents a point along the path (string), and 
-(3) the columns should be separated by a space character.
-
 """
 import argparse
 import csv
@@ -16,7 +9,7 @@ import numpy as np
 from functions import *
  
 def _make_parser():
-	p = argparse.ArgumentParser()
+	p = argparse.ArgumentParser(description="Tool to estimate the convergence of the string method for the calculation of the minimum free energy path. The calculation is based of the succesive differences between strings in the space of the normalized CVs. In the input files: (1) each column represents a CV, (2) each row represents a point along the path (string), and (3) the columns should be separated by a space character.", epilog="Thanks for using convergence.py!!")
 	p.add_argument('Niter', type=int, help="number of iterations files updating the strings",default=100)
 	p.add_argument('IN_file', help="Prefix of the files containing the string iterations. Example: if you have the files  file1 file2, etc., then IN_file='file'")
 	return p

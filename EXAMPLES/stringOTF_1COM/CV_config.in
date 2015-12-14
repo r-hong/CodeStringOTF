@@ -1,0 +1,29 @@
+colvarsTrajFrequency 100
+
+colvar {
+  name stop_distance
+  distance {
+    group1 {
+      atomNumbers 10 11 12 13 14 15 
+    }
+    group2 {
+      dummyAtom (0.0000,1.0000,2.0000) 
+    }
+  }
+}
+
+colvar {
+  name stop_rotation
+  orientation {
+    atoms {
+      atomNumbers 10 11 12 13 14 15    	
+    }
+    refPositionsFile     fixed.pdb  
+  }
+}
+
+harmonic {               
+  colvars stop_distance stop_rotation          
+  centers 0 (1, 0, 0, 0)  
+  forceConstant 1000.0    
+}

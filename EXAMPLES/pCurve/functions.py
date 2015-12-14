@@ -1138,25 +1138,6 @@ def savermsd(NP,rmsd,X,fileOUT):
         file1 = open(fileOUT, 'w')
         pickle.dump(allvars, file1)
 
-def ecdf(data):
-	"""
-	Empirical distribution function
-	"""
-	x=np.linspace(min(data),max(data),len(data))
-	cdf=[]
-	suma=0.0
-	for i in range(len(x)):
-		todel=[]
-		for j in range(len(data)):
-			if (data[j]<x[i]):
-				suma=suma+1.0
-				todel.append(j)
-		prob=float((suma/len(x)))
-		cdf.append(prob)
-		for q in range(len(todel)):
-			data.pop(todel[q])
-	return x, cdf
-
 def bootstrapN(X,N):
 	"""
 	Bootstrap resampling.
@@ -1288,17 +1269,18 @@ def ligCOM(df,ligand):
         zc=z/c
         return xc, yc, zc
 
-def getPdbFilename(a,b,ffname):
-        '''
-        This is a custom function with very restricted use for the filenames we use in the original simulations.
-        The function simply creates a file named namdout{a}-{b}.coor
-        input: 
-           (1) a      = index of the image in the string
-           (2) b      = index of the iterationin the string method procedure
-           (3) ffname = prefix of the pdb from the OTF calculations
-        output:
-           (4)  name of the pdb files on the new reparametrized string
-        '''
+
+def getPdbFilename(a,b):  
+	'''
+	This is a custom function with very restricted use for the filenames we use in the original simulations.
+	The function simply creates a file named namdout{a}-{b}.coor
+	input: 
+	   (1) a = index of the image in the string
+	   (2) b = index of the iterationin the string method procedure
+	output:
+	   (3)  name of the pdb file
+	'''
+        ffname='namdout'
         ffname+=`a`
         ffname+='-'
         ffname+=`b`
@@ -1343,4 +1325,71 @@ def getMeanString(allstrings):
                 ym.append(yt[i]/len(allstrings))
                 zm.append(zt[i]/len(allstrings))
         return xm,ym,zm
+
+def plotCorrMatrix(df,L=10):
+	'''This tool displays the correlation matrix formed by all the pairs of columns (time series) in a dataframe.
+	Input:
+	df --> pandas DataFrame
+	L  --> length (horizontal and vertical) of the figure
+	'''
+	CM = df.corr()
+	valMin, valMax = np.abs(CM).min().min(), np.abs(CM).max().max()
+	#if there are too many time series --> interpolate (smooth) the correlation matrix 
+	if df.shape[1] > 20:
+		interpol='bilinear'
+	else:
+		interpol='none'
+	#plot
+	fig, ax = plt.subplots(figsize=(L, L))
+	plt.xticks(range(len(CM.columns)), CM.columns);
+	plt.yticks(range(len(CM.columns)), CM.columns);
+	ax.set_title('Correlation matrix between the time series')
+	plt.imshow(CM,cmap='RdBu', vmin=valMin, vmax=valMax,interpolation=interpol, origin='lower')
+	plt.colorbar()
+	plt.show()
+
+def getVec(matrix,index1,index2):
+	'''
+	Given a matrix and 2 indexes it returns the independent and consecutively merged versions of the corresponding indexed vectors  
+	'''
+        #single data
+        x1=matrix[index1]
+        x2=matrix[index2]
+        xx1=[]
+        xx2=[]
+        for i in range(len(x1)):
+                xx1.append(x1[i])
+                xx2.append(x2[i])
+
+        #merged data
+        xtt=[]
+        for i in range(len(x1)+len(x2)):
+                if (i < len(x1)):
+                        xtt.append(x1[i])
+                else:
+                        xtt.append(x2[i-len(x1)])
+
+        x1=np.asarray(xx1)
+        x2=np.asarray(xx2)
+        xt=np.asarray(xtt)
+        return x1,x2,xt
+
+def commonArea(density1,density2,xgridt):
+	'''
+	Calculate the common area between 2 density profiles previously estimated
+	using the nonparametric kernel module for python (kde.gaussian_kde)  
+	Output:
+	(1) the curve corresponding to the common area (ac)
+	(2) ratio between the common area (sum(ac)) and the area of the largest density profile
+	'''
+        d1=density1(xgridt)
+        d2=density2(xgridt)
+        ac=[]
+        for i in range(len(d1)):
+                if (d1[i]>d2[i]):
+                        ac.append(d2[i])
+                else:
+                        ac.append(d1[i])
+        AC=1.0-((np.sum(ac))/(max([np.sum(d1), np.sum(d2)])))
+        return ac, AC
 

@@ -1,0 +1,21 @@
+Please refer to the tutorial for a general workflow to prepare the files and run these calculations.
+Additional information is provided here about the files involved in this calculation
+The folder structure for this calculation is the following:
+./           # run files (see bellow)      
+/INPUT/      # (1) coordinate, velocities, box dimension and topologies for the initial string,(2) file initialPcurve.dat 
+/OUTPUT/     # IDEM to folder INPUT, but for every iteration of the OTF string method.
+
+
+Now we give a general description of the files in the main folder
+
+OTF_string.sh        | main script with the framework for the OTF string method calculation.
+reparam.f90          | fortran code for the reparametrizatio; default variables correspond to a calculation with 3 collective variables
+                     | this code contains indications on how to change it and use 6 collective variables (coordinates of 2 centers of mass)
+
+reparametrization.x  | executable from reparam.f90
+TMP_COORD.namd       | namd configuration file (normal OTF calculation)
+TMP_COORD_FIXED.namd | namd configuration file (for points on the curve that we want to keep fixed, without evolving the forces)
+namd_OTF.tcl         | script for namd tcl forces (normal OTF calculation) 
+namd_OTF_FIXED.tcl   | script for namd tcl forces (for points on the curve that we want to keep fixed, without evolving forces)
+CV_config.in         | configuration file to use the collective variable module. Is use to stop translations/rotations on the receptor
+fixed.pdb            | pdb file with the reference positions to restrain the translations/rotations on the receptor 

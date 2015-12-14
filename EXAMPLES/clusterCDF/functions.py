@@ -1138,25 +1138,6 @@ def savermsd(NP,rmsd,X,fileOUT):
         file1 = open(fileOUT, 'w')
         pickle.dump(allvars, file1)
 
-def ecdf(data):
-	"""
-	Empirical distribution function
-	"""
-	x=np.linspace(min(data),max(data),len(data))
-	cdf=[]
-	suma=0.0
-	for i in range(len(x)):
-		todel=[]
-		for j in range(len(data)):
-			if (data[j]<x[i]):
-				suma=suma+1.0
-				todel.append(j)
-		prob=float((suma/len(x)))
-		cdf.append(prob)
-		for q in range(len(todel)):
-			data.pop(todel[q])
-	return x, cdf
-
 def bootstrapN(X,N):
 	"""
 	Bootstrap resampling.
@@ -1288,17 +1269,18 @@ def ligCOM(df,ligand):
         zc=z/c
         return xc, yc, zc
 
-def getPdbFilename(a,b,ffname):
-        '''
-        This is a custom function with very restricted use for the filenames we use in the original simulations.
-        The function simply creates a file named namdout{a}-{b}.coor
-        input: 
-           (1) a      = index of the image in the string
-           (2) b      = index of the iterationin the string method procedure
-           (3) ffname = prefix of the pdb from the OTF calculations
-        output:
-           (4)  name of the pdb files on the new reparametrized string
-        '''
+
+def getPdbFilename(a,b):  
+	'''
+	This is a custom function with very restricted use for the filenames we use in the original simulations.
+	The function simply creates a file named namdout{a}-{b}.coor
+	input: 
+	   (1) a = index of the image in the string
+	   (2) b = index of the iterationin the string method procedure
+	output:
+	   (3)  name of the pdb file
+	'''
+        ffname='namdout'
         ffname+=`a`
         ffname+='-'
         ffname+=`b`

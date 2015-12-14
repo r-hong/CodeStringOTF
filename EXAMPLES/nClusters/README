@@ -1,0 +1,2 @@
+example:
+./ncluster.py rawClusters6 10 30 -CV 0 -CV 1 -CV 2 -plotdata yes

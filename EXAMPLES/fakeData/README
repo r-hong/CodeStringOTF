@@ -1,0 +1,2 @@
+example:
+./fakeData.py 6 400 rawClusters

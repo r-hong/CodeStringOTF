@@ -1,0 +1,70 @@
+# NAMD configuration file
+
+# MOLECULAR SYSTEM
+amber                   yes
+coordinates             T.coor
+parmfile                T.top
+
+# APPROXIMATIONS
+switching       on
+switchdist      10
+cutoff          12
+pairlistdist    14
+margin          10
+stepspercycle   10
+exclude         scaled1-4
+1-4scaling      1.0
+
+#INTEGRATOR
+timestep 1.0
+
+# OUTOPUT
+binaryoutput        no
+binaryrestart       no
+set output          namdout
+outputname          $output
+restartfreq         100
+DCDfile             ${output}.coor.dcd
+DCDfreq             100
+velDCDfile          ${output}.vel.dcd
+velDCDfreq          100
+xstfile             ${output}.xsc
+xstfreq             100
+
+#STANDART OUTPUT
+outputEnergies      100
+outputPressure      100
+outputMomenta       100
+outputTiming        100
+
+# PME (for full-system periodic electrostatics)
+PME                 yes
+PMEGridSpacing      1
+wrapAll             on
+
+#PERIODIC BOUNDARY CONDITIONS (change according to your system)
+cellBasisVector1   108.00   0.      0.
+cellBasisVector2     0.   90.00     0.
+cellBasisVector3     0.     0.    113.00
+cellOrigin          54.50  43.40   55.36
+
+# TEMPERATURE CONTROL
+langevin            on
+langevinDamping     5
+langevinTemp        300
+temperature         300
+
+#PRESSURE CONTROL
+useGroupPressure        yes
+#useFlexibleCell         yes
+#LangevinPiston          on
+#LangevinPistonTarget    1
+#LangevinPistonPeriod    200
+#LangevinPistonDecay     100
+#LangevinPistonTemp      300
+
+# Scripting
+colvars on
+colvarsConfig CV_config.in
+tclforces on
+tclforcesscript namd_OTF_FIXED.tcl

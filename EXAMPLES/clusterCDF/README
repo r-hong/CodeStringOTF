@@ -1,0 +1,2 @@
+example:
+>./clusterCDF.py LIGAND_COM_ALL.txt 5 30 -CVi 0 -CVi 1 -CVi 2 -plotdata no

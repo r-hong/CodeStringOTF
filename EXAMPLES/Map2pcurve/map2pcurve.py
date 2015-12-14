@@ -18,7 +18,7 @@ from collections import defaultdict, Counter
 ###### Parsing arguments from the command line ########
 #######################################################
 def _make_parser():
-	parser = argparse.ArgumentParser(description="This tool maps collective variables (CVs) from an input file on a principal curve. Each CV in the data file should be place in a column. The rows in the CV data file should coincide in time with the CVs used to estimate the pricipal curve (as a particular case, the same CV data file can be used with both pcurve.py and map2curve.py). The initial and final indexes of the CVs to be mapped should be provided. The information of the principal curve is automatically loaded from the file 'pcurve_state.dat' (output from 'pcurve.py' ). To extract CVs from MD trajectories using VMD see the file getCVs.tcl.",epilog="Thanks for using map2curve.py!!")
+	parser = argparse.ArgumentParser(description="This tool maps collective variables (CVs) from an input file on a principal curve. Each CV in the data file should be place in a column. The rows in the CV data file should coincide in time with the CVs used to estimate the pricipal curve (as a particular case, the same CV data file can be used with both pcurve.py and map2pcurve.py). The initial and final indexes of the CVs to be mapped should be provided. The information of the principal curve is automatically loaded from the file 'pcurve_state.dat' (output from 'pcurve.py' ). To extract CVs from MD trajectories using VMD see the file getFromDCD.tcl.",epilog="Thanks for using map2pcurve.py!!")
 	parser.add_argument('pcurveFile', help="Input file with the data from a calculated principal curve.")
 	parser.add_argument('cvFile', help="Input file with CVs.")
 	parser.add_argument('iniCV', type=int, help="Index (column) of the first CV to be mapped.")
@@ -94,6 +94,8 @@ if __name__ == '__main__':
 	             cmap=cmap)
 	plt.colorbar()
 	plt.title('Mean of the CVs along pcurve')
+	plt.xlabel('Images on the principal curve')
+	plt.ylabel('CVs')
 	plt.show()
 
 	###################################
@@ -109,6 +111,8 @@ if __name__ == '__main__':
 	             cmap=cmap)
 	plt.colorbar()
 	plt.title('Std of the CVs along pcurve')
+        plt.xlabel('Images on the principal curve')
+        plt.ylabel('CVs')
 	plt.show()
 
 	#########################################################################
@@ -124,6 +128,8 @@ if __name__ == '__main__':
 	             cmap=cmap)
 	plt.colorbar()
 	plt.title('Closest point to the Min pcurve')
+        plt.xlabel('Images on the principal curve')
+        plt.ylabel('CVs')
 	plt.show()
 
 	####################################################################
@@ -159,6 +165,8 @@ if __name__ == '__main__':
 	             cmap=cmap)
 	plt.colorbar()
 	plt.title('Closest points to the Mout pcurve')
+        plt.xlabel('Images on the principal curve')
+        plt.ylabel('CVs')
 	plt.show()
 
 	### Note: this list of indexes (closeII) is not built from the voronoi cells,
